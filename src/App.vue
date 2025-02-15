@@ -1,112 +1,83 @@
 <template>
-	<form @submit.prevent="checkForm" class="'sign-up'">
-		<div class="form-group">
-			<label>
-				Login:
-				<input v-model="form.login" type="text">
-			</label>
-		</div>
-		<div class="form-group">
-			<label>
-				Email:
-				<input v-model="form.email" type="email">
-			</label>
-		</div>
-		<div class="form-group">
-			<label>
-				Password:
-				<input v-model="form.password" type="password">
-			</label>
-		</div>
-		<div class="form-group">
-			<label>
-				Country of residence:
-				<select v-model="form.country">
-					<option v-for="(country, index) in countries" :value="country.value" :key="index">
-						{{ country.label }}
-					</option>
-				</select>
-			</label>
-		</div>
-		<div class="form-group">
-			<label>
-				Favotite Themes:
-				<select id="themes" class="form-control" v-model="form.favoiriteThemes" multiple>
-					<option v-for="(theme, index) in themes" :value="theme.value" :key="index">
-						{{ theme.label }}
-					</option>
-				</select>
-			</label>
-		</div>
-		<div class="form-group">
-			<label>
-				<input v-model="form.agreeWithSendNews" type="checkbox">
-				Notify me about news
-			</label>
-		</div>
-		<div class="form-group">
-			<label>
-				<input v-model="form.gendere" type="radio" value="male" name="sex">
-				Man
-			</label>
-			<label>
-				<input v-model="form.gendere" type="radio" value="female" name="sex">
-				Woman
-			</label>
-		</div>
-		<button>Save</button>
-	</form>
+	<div class="container">
+		<h2 class="header__title">Expense Tracker</h2>
+		<Balance :total="total" :income="income" :expenses="expenses" />
+		<TransactionList :transactions="transactions" :deleteTransaction="deleteTransaction" />
+		<AddTransaction @transactionSubmitted="handleTransactionSubmitted" />
+	</div>
 </template>
 
-
-
 <script setup>
-import { ref } from 'vue'
+import Balance from "./components//Balance.vue"
+import TransactionList from "./components/TransactionList.vue"
+import AddTransaction from "./components//AddTransaction.vue"
+import { ref, computed, onMounted } from "vue"
+import { useToast } from "vue-toastification";
+
+const toast = useToast()
+const transactions = ref([])
 
 
-const form = ref({
-	login: '',
-	email: '',
-	password: '',
-	country: 'Russia',
-	favoiriteThemes: ['languages'],
-	agreeWithSendNews: false,
-	gendere: 'male'
+const handleTransactionSubmitted = (transaction) => {
+	transactions.value.push(transaction)
+	toast.success('Transaction added')
+	saveTransactionsToLacaleStorage()
+}
+
+onMounted(() => {
+	const savedTransactions = JSON.parse(localStorage.getItem('transactions'))
+	if (savedTransactions) {
+		transactions.value = savedTransactions
+	}
 })
 
-const countries = ref([
-	{
-		label: 'Россия',
-		value: 'Russia'
-	},
-	{
-		label: 'Украина',
-		value: 'Ukraine'
-	},
-	{
-		label: 'США',
-		value: 'USA'
-	}
-])
+const total = computed(() => {
+	return transactions.value
+		.reduce((acc, transaction) => {
+			return acc + +transaction.amount
+		}, 0)
+})
 
-const themes = ref([
-	{
-		label: 'Технологии',
-		value: 'IT'
-	},
-	{
-		label: 'Языки',
-		value: 'languages'
-	},
-	{
-		label: 'Математика',
-		value: 'mathematics'
-	}
-])
+// get Income
+const income = computed(() => {
+	return transactions.value
+		.filter((transaction) => transaction.amount > 0)
+		.reduce((acc, { amount }) => {
+			return acc + amount
+		}, 0)
+})
 
+// get expenses
+const expenses = computed(() => {
+	return transactions.value
+		.filter((transaction) => transaction.amount < 0)
+		.reduce((acc, { amount }) => {
+			return acc + amount
+		}, 0)
+})
 
+// delete transaction
+const deleteTransaction = (id) => {
+	transactions.value = transactions
+		.value.filter(transaction => transaction.id !== id)
+	toast.success('Transaction deleted')
+	saveTransactionsToLacaleStorage()
+}
 
+const saveTransactionsToLacaleStorage = () => {
+	localStorage.setItem('transactions', JSON.stringify(transactions.value))
+}
 
 </script>
 
-<style></style>
+
+
+<style scoped lang="scss">
+.header {
+	&__title {
+		font-size: 24px;
+		text-align: center;
+		margin-bottom: 30px;
+	}
+}
+</style>

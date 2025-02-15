@@ -1,33 +1,31 @@
-input {
-	border: 1px solid #000;
-	margin: 5px;
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
 
+:root {
+	--box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
-::placeholder {
-	font-size: 14px;
-	padding: 0 5px;
+body {
+	background-color: #f7f7f7;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	margin: 0;
+	font-family: 'Lato', sans-serif;
+	font-size: 18px;
 }
 
-button {
-	background-color: #e53e30;
-	padding: 5px 10px;
-	border-radius: 5px;
-	margin: 5px;
-	user-select: none;
+.container {
+	margin: 30px auto;
+	width: 400px;
+
+	@media (max-width: 450px) {
+		width: 280px;
+	}
 }
 
-h1 {
-	text-align: center;
-	font-size: 30px;
-	padding: 10px 0;
-}
-
-button.tag {
-	background-color: transparent;
-	border: 1px dotted #000
-}
-
-button.tag.active {
-	background-color: #fcc31f;
+h3 {
+	font-size: 20px;
+	font-weight: 700;
 }

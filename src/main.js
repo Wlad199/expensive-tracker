@@ -1,14 +1,16 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router/router.js'
-import { createPinia } from "pinia";
 
+// toastification
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+
+// Style
 import './scss/null.scss'
 import './scss/style.scss'
 
 const app = createApp(App)
 
-//app.use(router)
-//app.use(createPinia())
+app.use(Toast)
 
 app.mount('#app')
