@@ -6,7 +6,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
-	//base: '/testVue/',
+	base: '/expensive-tracker/',
 	plugins: [
 		vue(),
 		vueDevTools(),

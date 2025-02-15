@@ -7,7 +7,7 @@ An expense tracker app built with Vue 3 and the composition API.
 - Save data to local storage
 - [Vue Toastification](https://github.com/Maronato/vue-toastification) for notifications
 
-<img src="./public/reduce-cost.ico" width="400" />
+<img src="./public/preview.png" width="400" />
 
 ---
 
